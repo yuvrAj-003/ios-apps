@@ -20,10 +20,12 @@ struct MovieList: View {
                 
                 ForEach(movies) {
                     movie in
-                    NavigationLink(movie.title) {
+                    NavigationStack {
                         
-                        MovieDetail(movie: movie)
-                        
+                        NavigationLink(movie.title) {
+                            MovieDetail(movie: movie)
+                            
+                        }
                     }
                 }
                 .onDelete(perform: deleteMovies(indexes:))
@@ -45,8 +47,10 @@ struct MovieList: View {
             .sheet(item: $newMovie) {
                 movie in
                 NavigationStack{
-                    MovieDetail(movie:movie)
+                    MovieDetail(movie:movie, isNew: true)
                 }
+                .interactiveDismissDisabled()
+                
                 
             }
             
@@ -62,7 +66,7 @@ struct MovieList: View {
     }
     
     private func addMovie() {
-        let newMovie = Movie(title: "Default", releaseDate: .now)
+        let newMovie = Movie(title: "", releaseDate: .now)
         context.insert(newMovie)
         self.newMovie = newMovie
     }

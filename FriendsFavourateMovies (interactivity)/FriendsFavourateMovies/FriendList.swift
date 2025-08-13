@@ -20,7 +20,10 @@ struct FriendList: View {
                 ForEach(friends) {
                     friend in
                     NavigationLink(friend.name){
-                        FriendDetail(friend: friend)
+                        NavigationStack {
+                            FriendDetail(friend: friend)
+                        }
+                       
                     }
                     
                 }
@@ -41,8 +44,9 @@ struct FriendList: View {
             .sheet(item: $newFriend) {
                 friend in
                 NavigationStack {
-                    FriendDetail(friend: friend)
+                    FriendDetail(friend: friend, isNew: true )
                 }
+                .interactiveDismissDisabled()
             }
         } detail : {
             Text("Select a friend")
@@ -53,7 +57,7 @@ struct FriendList: View {
     }
     
     private func addFriend() {
-        let newFriend = Friend(name: "Default")
+        let newFriend = Friend(name: "")
         context.insert(newFriend)
         self.newFriend = newFriend
     }
