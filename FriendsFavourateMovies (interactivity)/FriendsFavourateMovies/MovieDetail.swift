@@ -14,6 +14,12 @@ struct MovieDetail: View {
     @Environment(\.dismiss) private var dismiss;
     @Environment(\.modelContext) private var context;
     
+    var sortedFriends: [Friend] {
+        movie.favoratedBy.sorted {
+            first, second in first.name < second.name
+        }
+    }
+    
     init(movie: Movie, isNew: Bool = false) {
         self.movie = movie;
         self.isNew = isNew;
@@ -31,6 +37,15 @@ struct MovieDetail: View {
                 
             
             DatePicker("Release date", selection: $movie.releaseDate, displayedComponents: .date)
+            
+            if !movie.favoratedBy.isEmpty {
+                Section("Favourated By") {
+                    ForEach(sortedFriends) {
+                        friend in
+                        Text(friend.name)
+                    }
+                }
+            }
         }
         .navigationTitle(isNew ? "New Movie" : "Movies")
         .navigationBarTitleDisplayMode(.inline)
@@ -57,5 +72,8 @@ struct MovieDetail: View {
 }
 
 #Preview {
-    MovieDetail(movie: SampleData.shared.movie)
+    NavigationStack {
+        MovieDetail(movie: SampleData.shared.movie)
+    }
+    .modelContainer(SampleData.shared.modelContainer)
 }
